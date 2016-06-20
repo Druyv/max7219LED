@@ -109,12 +109,12 @@ void max7219LED::clear(int matrix[LEDMATRIX_SIZE+1][(LEDMATRIX_SIZE*LEDMATRIX_AM
 ///All registers specified in this method must be initialised.
 ///It uses the send_repeated_data method to send the commands to every max7219 chip connected.
 void max7219LED::initialise(int matrix[LEDMATRIX_SIZE+1][(LEDMATRIX_SIZE*LEDMATRIX_AMOUNT)+1]){
-    send_repeated_data( ( MAX7219_REG_DISPLAYTEST << 8) | MAX7219_NO_OP_DATA, LEDMATRIX_AMOUNT );
-    send_repeated_data( ( MAX7219_REG_SHUTDOWN    << 8) | MAX7219_NORMAL_OPERATION, LEDMATRIX_AMOUNT );
-    send_repeated_data( ( MAX7219_REG_SCAN_LIMIT  << 8) | MAX7219_SCAN_LIMIT, LEDMATRIX_AMOUNT );
-    send_repeated_data( ( MAX7219_REG_DECODE      << 8) | MAX7219_NO_OP_DATA, LEDMATRIX_AMOUNT );
-    send_repeated_data( ( MAX7219_REG_BRIGHTNESS  << 8) | BRIGHTNESS_LVL, LEDMATRIX_AMOUNT );
-    max7219LED::clear(matrix);
+    send_repeated_data( ( MAX7219_REG_DISPLAYTEST << 8) | MAX7219_NO_OP_DATA, LEDMATRIX_AMOUNT );       //Sets display test
+    send_repeated_data( ( MAX7219_REG_SHUTDOWN    << 8) | MAX7219_NORMAL_OPERATION, LEDMATRIX_AMOUNT ); //Sets shutdown mode
+    send_repeated_data( ( MAX7219_REG_SCAN_LIMIT  << 8) | MAX7219_SCAN_LIMIT, LEDMATRIX_AMOUNT );       //Sets scan limit
+    send_repeated_data( ( MAX7219_REG_DECODE      << 8) | MAX7219_NO_OP_DATA, LEDMATRIX_AMOUNT );       //Sets decode mode
+    send_repeated_data( ( MAX7219_REG_BRIGHTNESS  << 8) | BRIGHTNESS_LVL, LEDMATRIX_AMOUNT );           //Sets brightness
+    max7219LED::clear(matrix);                                                                          //Clears matrix, just in case
 }
 
 ///Translates (software)matrix to screen
