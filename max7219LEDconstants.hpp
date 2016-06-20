@@ -54,7 +54,7 @@ constexpr uint8_t MAX7219_SCAN_LIMIT        = 0x07;
 ///Used to enable Shutdown mode and Display test.
 constexpr uint8_t MAX7219_NORMAL_OPERATION  = 0x01;
 ///Sets brightness of LEDs (0x01-0x1F).
-constexpr uint8_t BRIGHTNESS_LVL            = 0x01;
+constexpr uint8_t BRIGHTNESS_LVL            = 0x05;
  
 ///Sets the amount of LED matrices daisy chained.
 constexpr uint8_t LEDMATRIX_AMOUNT          = 4;    
