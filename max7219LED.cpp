@@ -59,7 +59,7 @@ void pulse_clk(hwlib::pin_out&clk){
 //
 ///This method sets the specified point (x,y) in the matrix to 1 (standard, or any other value if otherwise specified in the data variable).
 void max7219LED::setPixel(int x, int y, int matrix[LEDMATRIX_SIZE+1][(LEDMATRIX_SIZE*LEDMATRIX_AMOUNT)+1], int data){
-    if((x<=LEDMATRIX_SIZE)&&(x>0)&&(y<=LEDMATRIX_SIZE*LEDMATRIX_AMOUNT)&&(y>0)){
+   if( ( x <= LEDMATRIX_SIZE ) && ( x > 0 ) && ( y <= LEDMATRIX_SIZE*LEDMATRIX_AMOUNT ) && ( y > 0 ) ){
         matrix[x][y] = data;
     }
 }
@@ -72,9 +72,9 @@ void max7219LED::setPixel(int x, int y, int matrix[LEDMATRIX_SIZE+1][(LEDMATRIX_
 ///Loading can also be done by using the send_repeated_data method, which uses this shift method.
 ///It is recommended to set repeat to the amount of max7219 chips daisychained, otherwise non-specified behaviour might occur when the data is loaded.
 void max7219LED::shift_repeated_data(const uint16_t data, const uint8_t repeat){
-    for(uint8_t repeat_cnt = 0; repeat_cnt < repeat; repeat_cnt++) {
-        for(int16_t bit_cnt = 15; bit_cnt >= 0; bit_cnt--) {
-            din.set((data & ( 1 << bit_cnt)) != 0);
+    for( uint8_t repeat_cnt = 0; repeat_cnt < repeat; repeat_cnt++ ) {
+        for( int16_t bit_cnt = 15; bit_cnt >= 0; bit_cnt-- ) {
+            din.set( ( data & ( 1 << bit_cnt ) ) != 0 );
             pulse_clk(clk);
         }
     }
@@ -86,9 +86,9 @@ void max7219LED::shift_repeated_data(const uint16_t data, const uint8_t repeat){
 ///This method uses the shift_repeated_data method.
 ///It is recommended to set repeat to the amount of max7219 chips daisychained, otherwise non-specified behaviour might occur when the data is loaded.
 void max7219LED::send_repeated_data(const uint16_t data, const uint8_t repeat){
-    cs.set(0); // pull chip-select low to allow clocking in data.
+    cs.set(0);          // pull chip-select low to allow clocking in data.
     max7219LED::shift_repeated_data(data, repeat);
-    cs.set(1); // pull chip-select high to load data.
+    cs.set(1);          // pull chip-select high to load data.
 }
 
 ///Clears the matrix and screen
@@ -96,7 +96,7 @@ void max7219LED::send_repeated_data(const uint16_t data, const uint8_t repeat){
 ///This method clears the matrix by setting all values to 0, and then uses the drawScreen method to translate this to the LED matrix screen.
 void max7219LED::clear(int matrix[LEDMATRIX_SIZE+1][(LEDMATRIX_SIZE*LEDMATRIX_AMOUNT)+1]){
     for(int columnr = 1; columnr <= LEDMATRIX_SIZE; columnr++ ){
-            for(int pixel = 1; pixel <= (LEDMATRIX_SIZE*LEDMATRIX_AMOUNT); pixel++){
+            for( int pixel = 1; pixel <= ( LEDMATRIX_SIZE*LEDMATRIX_AMOUNT ); pixel++ ){
                 max7219LED::setPixel(columnr,pixel,matrix,0);
             }
     }
@@ -109,11 +109,11 @@ void max7219LED::clear(int matrix[LEDMATRIX_SIZE+1][(LEDMATRIX_SIZE*LEDMATRIX_AM
 ///All registers specified in this method must be initialised.
 ///It uses the send_repeated_data method to send the commands to every max7219 chip connected.
 void max7219LED::initialise(int matrix[LEDMATRIX_SIZE+1][(LEDMATRIX_SIZE*LEDMATRIX_AMOUNT)+1]){
-    send_repeated_data((MAX7219_REG_DISPLAYTEST << 8) | MAX7219_NO_OP_DATA, LEDMATRIX_AMOUNT);
-    send_repeated_data((MAX7219_REG_SHUTDOWN    << 8) | MAX7219_NORMAL_OPERATION, LEDMATRIX_AMOUNT);
-    send_repeated_data((MAX7219_REG_SCAN_LIMIT  << 8) | MAX7219_SCAN_LIMIT, LEDMATRIX_AMOUNT);
-    send_repeated_data((MAX7219_REG_DECODE      << 8) | MAX7219_NO_OP_DATA, LEDMATRIX_AMOUNT);
-    send_repeated_data((MAX7219_REG_BRIGHTNESS  << 8) | BRIGHTNESS_LVL, LEDMATRIX_AMOUNT);
+    send_repeated_data( ( MAX7219_REG_DISPLAYTEST << 8) | MAX7219_NO_OP_DATA, LEDMATRIX_AMOUNT );
+    send_repeated_data( ( MAX7219_REG_SHUTDOWN    << 8) | MAX7219_NORMAL_OPERATION, LEDMATRIX_AMOUNT );
+    send_repeated_data( ( MAX7219_REG_SCAN_LIMIT  << 8) | MAX7219_SCAN_LIMIT, LEDMATRIX_AMOUNT );
+    send_repeated_data( ( MAX7219_REG_DECODE      << 8) | MAX7219_NO_OP_DATA, LEDMATRIX_AMOUNT );
+    send_repeated_data( ( MAX7219_REG_BRIGHTNESS  << 8) | BRIGHTNESS_LVL, LEDMATRIX_AMOUNT );
     max7219LED::clear(matrix);
 }
 
@@ -121,11 +121,11 @@ void max7219LED::initialise(int matrix[LEDMATRIX_SIZE+1][(LEDMATRIX_SIZE*LEDMATR
 //
 ///This method reads a matrix, and draws the corresponding pixels on the LED matrix screen.
 void max7219LED::drawScreen(int matrix[LEDMATRIX_SIZE+1][(LEDMATRIX_SIZE*LEDMATRIX_AMOUNT)+1]){
-    for( int columnr = 1; columnr <= LEDMATRIX_SIZE; columnr++){
+    for( int columnr = 1; columnr <= LEDMATRIX_SIZE; columnr++ ){
         cs.set(0);
-        for(int pixel = (LEDMATRIX_SIZE*LEDMATRIX_AMOUNT); pixel >= 1; pixel--){
-            if(pixel%8 == 0){
-                for (int columnbit = 7; columnbit >=0; columnbit-- ){
+        for( int pixel = ( LEDMATRIX_SIZE*LEDMATRIX_AMOUNT ); pixel >= 1; pixel-- ){
+            if( pixel%8 == 0 ){
+                for ( int columnbit = 7; columnbit >= 0; columnbit-- ){
                     din.set( ( columnr & ( 1 << columnbit ) ) != 0 );
                     pulse_clk(clk);
                 }
@@ -142,13 +142,10 @@ void max7219LED::drawScreen(int matrix[LEDMATRIX_SIZE+1][(LEDMATRIX_SIZE*LEDMATR
 ///This method sets a pixel in the matrix to 1 (or any other value if otherwise specified in the data variable), and then draws it to the screen.
 ///It is a combinatory method of setPixel and drawScreen, making it more efficient to call this method for single pixels, but slower for bigger objects.
 void max7219LED::drawPixel(int x, int y, int matrix[LEDMATRIX_SIZE+1][(LEDMATRIX_SIZE*LEDMATRIX_AMOUNT)+1], int data){
-    if(x > LEDMATRIX_SIZE) x = LEDMATRIX_SIZE;
-    if(x < 1) x = 1;
-    if(y > LEDMATRIX_SIZE*LEDMATRIX_AMOUNT) y = LEDMATRIX_SIZE*LEDMATRIX_AMOUNT;
-    if(y < 1) y = 1;
-    
-    max7219LED::setPixel(x,y,matrix,data);
-    max7219LED::drawScreen(matrix);
+   if( ( x <= LEDMATRIX_SIZE ) && ( x > 0 ) && ( y <= LEDMATRIX_SIZE*LEDMATRIX_AMOUNT ) && ( y > 0 ) ){
+        max7219LED::setPixel(x,y,matrix,data);
+        max7219LED::drawScreen(matrix);
+   }
 }
 
 ///Get width of object
