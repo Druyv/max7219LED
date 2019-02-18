@@ -43,7 +43,7 @@ max7219LED::max7219LED(hwlib::target::pin_out clk, hwlib::target::pin_out din, h
     {
         hwlib::wait_ms(1000);
     }
-
+//TEST
 ///Pulse clock
 //
 ///This function pulses the clock
